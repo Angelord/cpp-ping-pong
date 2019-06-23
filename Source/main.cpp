@@ -1,12 +1,14 @@
 #include <iostream>
 #include <SDL.h>
+#include "Game.h"
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
 SDL_Window* g_window = NULL;
 SDL_Surface* g_screenSurface = NULL;
-bool g_gameOver = false;
+Game* g_game = NULL;
+bool g_quit = false;
 
 bool Initialize();
 
@@ -20,9 +22,15 @@ int main() {
         return -1;
     }
 
-    while(!g_gameOver) {
+    while(!g_quit && !g_game->Over()) {
 
         HandleEvents();
+
+        g_game->Update();
+
+        g_game->Render(g_screenSurface);
+
+        SDL_UpdateWindowSurface(g_window);
     }
 
     Shutdown();
@@ -45,10 +53,18 @@ bool Initialize() {
 
     g_screenSurface = SDL_GetWindowSurface(g_window);
 
+    g_game = new Game;
+    if(!g_game->Initialize(g_screenSurface)) {
+        std::cerr << "ERROR::Failed to initialize Game!" << std::endl;
+        return false;
+    }
+
     return true;
 }
 
 void Shutdown() {
+
+    delete g_game;
 
     SDL_DestroyWindow(g_window);
 
@@ -60,7 +76,10 @@ void HandleEvents() {
 
     while(SDL_PollEvent(&ev) != 0) {
         if(ev.type == SDL_QUIT) {
-            g_gameOver = true;
+            g_quit = true;
+        }
+        else {
+            g_game->HandleSDLEvent(ev);
         }
     }
 }
