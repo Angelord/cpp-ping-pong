@@ -18,12 +18,14 @@ class Game {
     static constexpr int WIDTH = 128;
     static constexpr int HEIGHT = 84;
     static constexpr int MARGIN_HEIGHT = 12;
-    static constexpr float SPEED_BALL = 1.4f;
+    static constexpr float SPEED_BALL = 1.0f;
+    static constexpr float SPEED_INCREMENT = 0.2f;  //How much the ball's speed increases when hit
     static constexpr float SPEED_PADDLE = 1.0f;
 
     bool over = false;
     std::map<int, GameObject*> gObjects;
     SDL_Surface* renderSurf = NULL;
+    float curBallSpeed = SPEED_BALL;
     int scoreLeft = 0;
     int scoreRight = 0;
 

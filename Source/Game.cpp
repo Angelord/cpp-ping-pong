@@ -73,7 +73,7 @@ void Game::Update() {
     bool hit = false;
     GameObject* hitPaddle = NULL;
     if(ball->Left() < lPaddle->Right()
-    && ball->Left() > lPaddle->Left()
+    && ball->Right() > lPaddle->Left()
     && ball->Top() > lPaddle->Top()
     && ball->Bottom() < lPaddle->Bottom()) {
         hit = true;
@@ -88,11 +88,12 @@ void Game::Update() {
     }
 
     if(hit) {
+        curBallSpeed += SPEED_INCREMENT;
         Vector2 ballVel = ball->Velocity();
         ballVel.x = -sgn(ballVel.x);
         ballVel = (ballVel + hitPaddle->Velocity());
         ballVel.Normalize();
-        ball->SetVelocity(ballVel * SPEED_BALL);
+        ball->SetVelocity(ballVel * curBallSpeed);
     }
 
     // Resolve movement
@@ -118,8 +119,9 @@ void Game::Update() {
 void Game::Reset(const Vector2& ballVel) {
     GameObject* ball = gObjects[(int)Ball];
 
+    curBallSpeed = SPEED_BALL;
     ball->SetPosition(WIDTH / 2, HEIGHT / 2);
-    ball->SetVelocity(ballVel);
+    ball->SetVelocity(ballVel * curBallSpeed);
 }
 
 void Game::Render(SDL_Surface* surface) {
