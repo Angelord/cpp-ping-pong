@@ -46,32 +46,30 @@ void Game::Update() {
     GameObject* rPaddle = gObjects[(int)Paddle_Right];
     GameObject* ball = gObjects[(int)Ball];
 
+
+    // Handle input
     const Uint8* keyState = SDL_GetKeyboardState(NULL);
 
     if(keyState[SDL_SCANCODE_UP] && rPaddle->Top() > 0) {
-        gObjects[(int)Paddle_Right]->Move(Vector2::UP);
+        gObjects[(int)Paddle_Right]->SetVelocity(Vector2::UP);
     }
     else if(keyState[SDL_SCANCODE_DOWN] && rPaddle->Bottom() < HEIGHT) {
-        gObjects[(int)Paddle_Right]->Move(Vector2::DOWN);
+        gObjects[(int)Paddle_Right]->SetVelocity(Vector2::DOWN);
     }
 
     if(keyState[SDL_SCANCODE_W] && lPaddle->Top() > 0) {
-        gObjects[(int)Paddle_Left]->Move(Vector2::UP);
+        gObjects[(int)Paddle_Left]->SetVelocity(Vector2::UP);
     }
     else if(keyState[SDL_SCANCODE_S] && lPaddle->Bottom() < HEIGHT) {
-        gObjects[(int)Paddle_Left]->Move(Vector2::DOWN);
+        gObjects[(int)Paddle_Left]->SetVelocity(Vector2::DOWN);
     }
 
-//    GameObject* ball = gObjects[ObjectIDs::Ball];
-//    GameObject* lPaddle = gObjects[ObjectIDs::Paddle_Left];
-//    GameObject* rPaddle = gObjects[ObjectIDs::Paddle_Right];
 
-//    if(ball->X() < 0) {
-        //P2 scored
-//    }
-//    else if(ball->X() > WIDTH) {
-        //P1 scored
-//    }
+    for(auto& gObj : gObjects) {
+        GameObject* gameObject = gObj.second;
+        gameObject->SetPosition(gameObject->Position() + gameObject->Velocity());
+        gameObject->SetVelocity(Vector2::ZERO);
+    }
 
     //Check collisions
         //Left paddle

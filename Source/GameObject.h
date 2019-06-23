@@ -18,7 +18,7 @@ class GameObject {
 public:
 
     GameObject(int id) : id(id) { }
-    
+
     int ID() const { return id; }
 
     int Top() const { return Y() - halfHeight; }
@@ -27,10 +27,12 @@ public:
     int Right() const { return X() + halfWidth; }
     int X() const { return (int)roundf(position.x); }
     int Y() const { return (int)roundf(position.y); }
+    Vector2 Position() const { return position; }
+    void SetPosition(const Vector2& position) { this->position = position; }
     void SetPosition(int x, int y) { position.Set(x, y); }
-    void Move(const Vector2& dir) { position = position + dir; }
-    void AddVelocity(const Vector2& dir) { velocity = velocity + dir; }
-    void ClearVelocity() { velocity.Set(0.0f, 0.0f); }
+    Vector2 Velocity() const { return velocity; }
+    void SetVelocity(const Vector2& velocity) { this->velocity = velocity; }
+
 
     int HalfWidth() const { return halfWidth; }
     void SetHalfWidth(int value) { halfWidth = value; }
