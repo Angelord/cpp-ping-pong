@@ -74,15 +74,15 @@ void Game::Update() {
     GameObject* hitPaddle = NULL;
     if(ball->Left() < lPaddle->Right()
     && ball->Right() > lPaddle->Left()
-    && ball->Top() > lPaddle->Top()
-    && ball->Bottom() < lPaddle->Bottom()) {
+    && ball->Bottom() > lPaddle->Top()
+    && ball->Top() < lPaddle->Bottom()) {
         hit = true;
         hitPaddle = lPaddle;
     }
     else if(ball->Right() > rPaddle->Left()
        && ball->Left() < rPaddle->Right()
-       && ball->Top() > rPaddle->Top()
-       && ball->Bottom() < rPaddle->Bottom()) {
+       && ball->Bottom() > rPaddle->Top()
+       && ball->Top() < rPaddle->Bottom()) {
         hit = true;
         hitPaddle = rPaddle;
     }
