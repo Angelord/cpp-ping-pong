@@ -17,6 +17,8 @@ class Game {
 
     static constexpr int WIDTH = 128;
     static constexpr int HEIGHT = 96;
+    static constexpr float SPEED_BALL = 1.4f;
+    static constexpr float SPEED_PADDLE = 1.0f;
 
     bool over = false;
     std::map<int, GameObject*> gObjects;
@@ -39,6 +41,8 @@ public:
 private:
 
     GameObject* CreateObject(int id);
+
+    void Reset();
 
     void SetPixel(int x, int y, Uint32 color);
 };

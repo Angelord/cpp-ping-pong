@@ -11,4 +11,8 @@
 #include <iostream>
 #include "Vector2.h"
 
+template <typename T> int sgn(T val) {
+    return (T(0) < val) - (val < T(0));
+}
+
 #endif //CPP_PING_PONG_CORE_H

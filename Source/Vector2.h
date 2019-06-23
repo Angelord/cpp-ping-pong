@@ -5,6 +5,8 @@
 #ifndef CPP_PING_PONG_POINT_H
 #define CPP_PING_PONG_POINT_H
 
+#include <math.h>
+
 struct Vector2 {
 
     static const Vector2 UP;
@@ -21,6 +23,16 @@ struct Vector2 {
     Vector2(float x, float y) : x(x), y(y) {}
 
     void Set(float x, float y) { this->x = x; this->y = y; }
+
+    void Normalize() {
+        float mag = Magnitude();
+        x /= mag;
+        y /= mag;
+    }
+
+    float Magnitude() {
+        return sqrt(x * x + y * y);
+    }
 
     Vector2 operator/(float rhs) const {
         return {x / rhs, y / rhs};

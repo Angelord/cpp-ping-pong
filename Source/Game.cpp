@@ -9,20 +9,20 @@ bool Game::Initialize(SDL_Surface* screenSurface) {
     GameObject* ball = CreateObject((int)ObjectIDs::Ball);
     GameObject* rPaddle = CreateObject((int)ObjectIDs::Paddle_Right);
     GameObject* lPaddle = CreateObject((int)ObjectIDs::Paddle_Left);
-
-    ball->SetPosition(WIDTH / 2, HEIGHT / 2);
     ball->SetSize(1, 1);
+    lPaddle->SetSize(2, 8);
+    rPaddle->SetSize(2, 8);
 
     lPaddle->SetPosition(6, HEIGHT / 2);
-    lPaddle->SetSize(2, 8);
     rPaddle->SetPosition(WIDTH - 6, HEIGHT / 2);
-    rPaddle->SetSize(2, 8);
 
     renderSurf = SDL_CreateRGBSurfaceWithFormat(screenSurface->flags, WIDTH, HEIGHT, 32, screenSurface->format->format);
     if(renderSurf == NULL) {
         std::cerr << "Failed to create render surface!" << SDL_GetError() << std::endl;
         return false;
     }
+
+    Reset();
 
     return true;
 }
@@ -51,32 +51,79 @@ void Game::Update() {
     const Uint8* keyState = SDL_GetKeyboardState(NULL);
 
     if(keyState[SDL_SCANCODE_UP] && rPaddle->Top() > 0) {
-        gObjects[(int)Paddle_Right]->SetVelocity(Vector2::UP);
+        gObjects[(int)Paddle_Right]->SetVelocity(Vector2::UP * SPEED_PADDLE);
     }
     else if(keyState[SDL_SCANCODE_DOWN] && rPaddle->Bottom() < HEIGHT) {
-        gObjects[(int)Paddle_Right]->SetVelocity(Vector2::DOWN);
+        gObjects[(int)Paddle_Right]->SetVelocity(Vector2::DOWN * SPEED_PADDLE);
     }
 
     if(keyState[SDL_SCANCODE_W] && lPaddle->Top() > 0) {
-        gObjects[(int)Paddle_Left]->SetVelocity(Vector2::UP);
+        gObjects[(int)Paddle_Left]->SetVelocity(Vector2::UP * SPEED_PADDLE);
     }
     else if(keyState[SDL_SCANCODE_S] && lPaddle->Bottom() < HEIGHT) {
-        gObjects[(int)Paddle_Left]->SetVelocity(Vector2::DOWN);
+        gObjects[(int)Paddle_Left]->SetVelocity(Vector2::DOWN * SPEED_PADDLE);
     }
 
+    // Handle wall collision
+    if(ball->Top() <= 0 || ball->Bottom() >= HEIGHT) {
+        ball->SetVelocity(Vector2(ball->Velocity().x, -ball->Velocity().y));    // Change y direction
+    }
 
+    // Handle paddle collision
+    bool hit = false;
+    GameObject* hitPaddle = NULL;
+    if(ball->Left() < lPaddle->Right()
+    && ball->Left() > lPaddle->Left()
+    && ball->Top() > lPaddle->Top()
+    && ball->Bottom() < lPaddle->Bottom()) {
+        hit = true;
+        hitPaddle = lPaddle;
+    }
+    else if(ball->Right() > rPaddle->Left()
+       && ball->Left() < rPaddle->Right()
+       && ball->Top() > rPaddle->Top()
+       && ball->Bottom() < rPaddle->Bottom()) {
+        hit = true;
+        hitPaddle = rPaddle;
+    }
+
+    if(hit) {
+        Vector2 ballVel = ball->Velocity();
+        ballVel.x = -sgn(ballVel.x);
+        ballVel = (ballVel + hitPaddle->Velocity());
+        ballVel.Normalize();
+        ball->SetVelocity(ballVel * SPEED_BALL);
+    }
+
+    // Resolve movement
     for(auto& gObj : gObjects) {
         GameObject* gameObject = gObj.second;
         gameObject->SetPosition(gameObject->Position() + gameObject->Velocity());
-        gameObject->SetVelocity(Vector2::ZERO);
     }
 
+    // Check for scoring
+    if(ball->Left() < 0) {
+        Reset();
+    }
+    else if(ball->Right() > WIDTH) {
+        Reset();
+    }
+
+    lPaddle->SetVelocity(Vector2::ZERO);
+    rPaddle->SetVelocity(Vector2::ZERO);
     //Check collisions
         //Left paddle
         //Right paddle
         //Screen edges
 
     //Update positions
+}
+
+void Game::Reset() {
+    GameObject* ball = gObjects[(int)Ball];
+
+    ball->SetPosition(WIDTH / 2, HEIGHT / 2);
+    ball->SetVelocity(Vector2::RIGHT);
 }
 
 void Game::Render(SDL_Surface* surface) {
