@@ -113,11 +113,11 @@ void Game::Update() {
 
     // Check for scoring
     if(ball->Left() < 0) {
-        OnScore(Left);
+        OnScore(Right);
         return;
     }
     else if(ball->Right() > WIDTH) {
-        OnScore(Right);
+        OnScore(Left);
         return;
     }
 
