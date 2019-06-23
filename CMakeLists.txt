@@ -8,7 +8,8 @@ include_directories(Includes/SDL)
 add_executable(cpp_ping_pong
         Source/main.cpp
         Source/Game.cpp
-        Source/GameObject.cpp
+        Source/Vector2.cpp
+        Source/Timer.cpp
         )
 
 target_link_libraries(cpp_ping_pong

@@ -18,9 +18,7 @@ class GameObject {
 public:
 
     GameObject(int id) : id(id) { }
-
-    void Update() { position = position + velocity; }
-
+    
     int ID() const { return id; }
 
     int Top() const { return Y() - halfHeight; }
@@ -30,7 +28,9 @@ public:
     int X() const { return (int)roundf(position.x); }
     int Y() const { return (int)roundf(position.y); }
     void SetPosition(int x, int y) { position.Set(x, y); }
-    void SetVelocity(const Vector2& vel) { this->velocity = vel; }
+    void Move(const Vector2& dir) { position = position + dir; }
+    void AddVelocity(const Vector2& dir) { velocity = velocity + dir; }
+    void ClearVelocity() { velocity.Set(0.0f, 0.0f); }
 
     int HalfWidth() const { return halfWidth; }
     void SetHalfWidth(int value) { halfWidth = value; }

@@ -7,6 +7,12 @@
 
 struct Vector2 {
 
+    static const Vector2 UP;
+    static const Vector2 DOWN;
+    static const Vector2 LEFT;
+    static const Vector2 RIGHT;
+    static const Vector2 ZERO;
+
     float x;
     float y;
 
@@ -16,25 +22,11 @@ struct Vector2 {
 
     void Set(float x, float y) { this->x = x; this->y = y; }
 
-    float Magnitude() const {
-        return sqrt(x * x + y * y);
-    }
-
-    float MagnitudeSqr() const {
-        return x * x + y * y;
-    }
-
-    void Normalize() {
-        float mag = Magnitude();
-        x /= mag;
-        y /= mag;
-    }
-
-    Vector2 operator/(float rhs) {
+    Vector2 operator/(float rhs) const {
         return {x / rhs, y / rhs};
     }
 
-    Vector2 operator*(float rhs) {
+    Vector2 operator*(float rhs) const {
         return {x * rhs, y * rhs};
     }
 };

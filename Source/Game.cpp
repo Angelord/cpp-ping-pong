@@ -6,9 +6,9 @@
 
 bool Game::Initialize(SDL_Surface* screenSurface) {
 
-    GameObject* ball = CreateObject((int)ObjectIDs::Paddle_Left);
+    GameObject* ball = CreateObject((int)ObjectIDs::Ball);
     GameObject* rPaddle = CreateObject((int)ObjectIDs::Paddle_Right);
-    GameObject* lPaddle = CreateObject((int)ObjectIDs::Ball);
+    GameObject* lPaddle = CreateObject((int)ObjectIDs::Paddle_Left);
 
     ball->SetPosition(WIDTH / 2, HEIGHT / 2);
     ball->SetSize(1, 1);
@@ -40,12 +40,25 @@ GameObject* Game::CreateObject(int id) {
     return obj;
 }
 
-void Game::HandleSDLEvent(SDL_Event& ev) {
-    if(ev.type == SDL_KEYDOWN) {
-    }
-}
-
 void Game::Update() {
+
+    const Uint8* keyState = SDL_GetKeyboardState(NULL);
+
+    if(keyState[SDL_SCANCODE_UP]) {
+        gObjects[(int)Paddle_Right]->Move(Vector2::UP);
+    }
+    else if(keyState[SDL_SCANCODE_DOWN]) {
+        gObjects[(int)Paddle_Right]->Move(Vector2::DOWN);
+    }
+
+    if(keyState[SDL_SCANCODE_W]) {
+        gObjects[(int)Paddle_Left]->Move(Vector2::UP);
+    }
+    else if(keyState[SDL_SCANCODE_S]) {
+        gObjects[(int)Paddle_Left]->Move(Vector2::DOWN);
+    }
+
+
 
 //    GameObject* ball = gObjects[ObjectIDs::Ball];
 //    GameObject* lPaddle = gObjects[ObjectIDs::Paddle_Left];
@@ -64,6 +77,7 @@ void Game::Update() {
         //Screen edges
 
     //Update positions
+
 }
 
 void Game::Render(SDL_Surface* surface) {

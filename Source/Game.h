@@ -7,7 +7,7 @@
 
 #include "GameObject.h"
 
-enum class ObjectIDs {
+enum ObjectIDs {
     Paddle_Left,
     Paddle_Right,
     Ball
@@ -29,8 +29,6 @@ public:
     ~Game();
 
     bool Initialize(SDL_Surface* screenSurface);
-
-    void HandleSDLEvent(SDL_Event& ev);
 
     void Update();
 

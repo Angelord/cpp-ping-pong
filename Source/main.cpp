@@ -1,9 +1,12 @@
 #include <iostream>
 #include <SDL.h>
 #include "Game.h"
+#include "Timer.h"
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
+const int FPS = 60;
+const int TICKS_PER_FRAME = 1000 / FPS;
 
 SDL_Window* g_window = NULL;
 SDL_Surface* g_screenSurface = NULL;
@@ -22,7 +25,11 @@ int main() {
         return -1;
     }
 
+    Timer frameCapTimer;
+
     while(!g_quit && !g_game->Over()) {
+
+        frameCapTimer.Start();
 
         HandleEvents();
 
@@ -31,6 +38,11 @@ int main() {
         g_game->Render(g_screenSurface);
 
         SDL_UpdateWindowSurface(g_window);
+
+        unsigned frameTicks = frameCapTimer.GetTicks();
+        if(frameTicks < TICKS_PER_FRAME) {
+            SDL_Delay(TICKS_PER_FRAME - frameTicks);
+        }
     }
 
     Shutdown();
@@ -77,9 +89,6 @@ void HandleEvents() {
     while(SDL_PollEvent(&ev) != 0) {
         if(ev.type == SDL_QUIT) {
             g_quit = true;
-        }
-        else {
-            g_game->HandleSDLEvent(ev);
         }
     }
 }
