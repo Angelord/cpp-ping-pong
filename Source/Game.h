@@ -16,13 +16,16 @@ enum ObjectIDs {
 class Game {
 
     static constexpr int WIDTH = 128;
-    static constexpr int HEIGHT = 96;
+    static constexpr int HEIGHT = 84;
+    static constexpr int MARGIN_HEIGHT = 12;
     static constexpr float SPEED_BALL = 1.4f;
     static constexpr float SPEED_PADDLE = 1.0f;
 
     bool over = false;
     std::map<int, GameObject*> gObjects;
     SDL_Surface* renderSurf = NULL;
+    int scoreLeft = 0;
+    int scoreRight = 0;
 
 public:
 
@@ -42,7 +45,7 @@ private:
 
     GameObject* CreateObject(int id);
 
-    void Reset();
+    void Reset(const Vector2& ballVel);
 
     void SetPixel(int x, int y, Uint32 color);
 };

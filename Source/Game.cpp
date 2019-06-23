@@ -16,13 +16,13 @@ bool Game::Initialize(SDL_Surface* screenSurface) {
     lPaddle->SetPosition(6, HEIGHT / 2);
     rPaddle->SetPosition(WIDTH - 6, HEIGHT / 2);
 
-    renderSurf = SDL_CreateRGBSurfaceWithFormat(screenSurface->flags, WIDTH, HEIGHT, 32, screenSurface->format->format);
+    renderSurf = SDL_CreateRGBSurfaceWithFormat(screenSurface->flags, WIDTH, HEIGHT + MARGIN_HEIGHT, 32, screenSurface->format->format);
     if(renderSurf == NULL) {
         std::cerr << "Failed to create render surface!" << SDL_GetError() << std::endl;
         return false;
     }
 
-    Reset();
+    Reset(Vector2::LEFT);
 
     return true;
 }
@@ -103,27 +103,23 @@ void Game::Update() {
 
     // Check for scoring
     if(ball->Left() < 0) {
-        Reset();
+        scoreLeft++;
+        Reset(Vector2::RIGHT);
     }
     else if(ball->Right() > WIDTH) {
-        Reset();
+        scoreRight++;
+        Reset(Vector2::LEFT);
     }
 
     lPaddle->SetVelocity(Vector2::ZERO);
     rPaddle->SetVelocity(Vector2::ZERO);
-    //Check collisions
-        //Left paddle
-        //Right paddle
-        //Screen edges
-
-    //Update positions
 }
 
-void Game::Reset() {
+void Game::Reset(const Vector2& ballVel) {
     GameObject* ball = gObjects[(int)Ball];
 
     ball->SetPosition(WIDTH / 2, HEIGHT / 2);
-    ball->SetVelocity(Vector2::RIGHT);
+    ball->SetVelocity(ballVel);
 }
 
 void Game::Render(SDL_Surface* surface) {
@@ -138,6 +134,12 @@ void Game::Render(SDL_Surface* surface) {
             for(int y = obj->Top(); y < obj->Bottom(); y++) {
                 SetPixel(x, y, white);
             }
+        }
+    }
+
+    for(int x = 0; x < WIDTH; x++) {
+        for(int y = HEIGHT; y < HEIGHT + MARGIN_HEIGHT; y++) {
+            SetPixel(x, y, white);
         }
     }
 
