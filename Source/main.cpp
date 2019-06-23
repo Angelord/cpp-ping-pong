@@ -3,6 +3,10 @@
 #include "Game.h"
 #include "Timer.h"
 
+// TODO : Scoring display
+// TODO : Reset game once over
+// TODO : Ball phys improvements
+
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 const int FPS = 60;

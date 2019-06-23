@@ -133,10 +133,17 @@ void Game::OnScore(Side side) {
     }
 
     Reset();
+
+    if(scoreLeft == SCORE_MAX || scoreRight == SCORE_MAX) {
+        over = true;
+        ballVel = Vector2::ZERO;
+    }
+
     gObjects[(int)Ball]->SetVelocity(ballVel);
 }
 
 void Game::Reset() {
+
     GameObject* ball = gObjects[(int)Ball];
 
     curBallSpeed = SPEED_BALL;
@@ -144,9 +151,12 @@ void Game::Reset() {
 }
 
 void Game::Render(SDL_Surface* surface) {
-    SDL_FillRect(renderSurf, NULL, SDL_MapRGB(renderSurf->format, 0x00, 0x00, 0x00));
 
+    Uint32 black = SDL_MapRGB(renderSurf->format, 0x00, 0x00, 0x00);
     Uint32 white = SDL_MapRGB(renderSurf->format, 0xFF, 0xFF, 0xFF);
+
+    SDL_FillRect(renderSurf, NULL, black);
+
     for(auto it = gObjects.begin(); it != gObjects.end(); it++) {
 
         GameObject* obj = it->second;
@@ -162,6 +172,14 @@ void Game::Render(SDL_Surface* surface) {
         for(int y = HEIGHT; y < HEIGHT + MARGIN_HEIGHT; y++) {
             SetPixel(x, y, white);
         }
+    }
+
+    for(int l = 0; l < scoreLeft; l++) {
+        SetPixel(10 + l * 4, HEIGHT + MARGIN_HEIGHT / 2, black);
+    }
+
+    for(int r = 0; r < scoreRight; r++) {
+        SetPixel(WIDTH - (10 + r * 4), HEIGHT + MARGIN_HEIGHT / 2, black);
     }
 
     SDL_BlitScaled(renderSurf, NULL, surface, NULL);

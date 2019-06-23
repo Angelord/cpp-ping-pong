@@ -26,7 +26,7 @@ class Game {
     static constexpr float SPEED_BALL = 1.0f;
     static constexpr float SPEED_INCREMENT = 0.2f;  //How much the ball's speed increases when hit
     static constexpr float SPEED_PADDLE = 1.0f;
-    static constexpr int SCORE_MAX = 1;
+    static constexpr int SCORE_MAX = 8;
 
     bool over = false;
     std::map<int, GameObject*> gObjects;
