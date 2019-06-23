@@ -42,23 +42,25 @@ GameObject* Game::CreateObject(int id) {
 
 void Game::Update() {
 
+    GameObject* lPaddle = gObjects[(int)Paddle_Left];
+    GameObject* rPaddle = gObjects[(int)Paddle_Right];
+    GameObject* ball = gObjects[(int)Ball];
+
     const Uint8* keyState = SDL_GetKeyboardState(NULL);
 
-    if(keyState[SDL_SCANCODE_UP]) {
+    if(keyState[SDL_SCANCODE_UP] && rPaddle->Top() > 0) {
         gObjects[(int)Paddle_Right]->Move(Vector2::UP);
     }
-    else if(keyState[SDL_SCANCODE_DOWN]) {
+    else if(keyState[SDL_SCANCODE_DOWN] && rPaddle->Bottom() < HEIGHT) {
         gObjects[(int)Paddle_Right]->Move(Vector2::DOWN);
     }
 
-    if(keyState[SDL_SCANCODE_W]) {
+    if(keyState[SDL_SCANCODE_W] && lPaddle->Top() > 0) {
         gObjects[(int)Paddle_Left]->Move(Vector2::UP);
     }
-    else if(keyState[SDL_SCANCODE_S]) {
+    else if(keyState[SDL_SCANCODE_S] && lPaddle->Bottom() < HEIGHT) {
         gObjects[(int)Paddle_Left]->Move(Vector2::DOWN);
     }
-
-
 
 //    GameObject* ball = gObjects[ObjectIDs::Ball];
 //    GameObject* lPaddle = gObjects[ObjectIDs::Paddle_Left];
@@ -77,7 +79,6 @@ void Game::Update() {
         //Screen edges
 
     //Update positions
-
 }
 
 void Game::Render(SDL_Surface* surface) {
