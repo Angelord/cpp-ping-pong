@@ -13,6 +13,11 @@ enum ObjectIDs {
     Ball
 };
 
+enum Side {
+    Left,
+    Right
+};
+
 class Game {
 
     static constexpr int WIDTH = 128;
@@ -21,6 +26,7 @@ class Game {
     static constexpr float SPEED_BALL = 1.0f;
     static constexpr float SPEED_INCREMENT = 0.2f;  //How much the ball's speed increases when hit
     static constexpr float SPEED_PADDLE = 1.0f;
+    static constexpr int SCORE_MAX = 1;
 
     bool over = false;
     std::map<int, GameObject*> gObjects;
@@ -41,13 +47,13 @@ public:
 
     void Render(SDL_Surface* surface);
 
-    bool Over() const { return over; }
-
 private:
 
     GameObject* CreateObject(int id);
 
-    void Reset(const Vector2& ballVel);
+    void OnScore(Side side);
+
+    void Reset();
 
     void SetPixel(int x, int y, Uint32 color);
 };

@@ -27,7 +27,7 @@ int main() {
 
     Timer frameCapTimer;
 
-    while(!g_quit && !g_game->Over()) {
+    while(!g_quit) {
 
         frameCapTimer.Start();
 

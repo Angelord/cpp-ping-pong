@@ -9,10 +9,12 @@ bool Game::Initialize(SDL_Surface* screenSurface) {
     GameObject* ball = CreateObject((int)ObjectIDs::Ball);
     GameObject* rPaddle = CreateObject((int)ObjectIDs::Paddle_Right);
     GameObject* lPaddle = CreateObject((int)ObjectIDs::Paddle_Left);
+
     ball->SetSize(1, 1);
+    ball->SetVelocity(Vector2::RIGHT * curBallSpeed);
+
     lPaddle->SetSize(2, 8);
     rPaddle->SetSize(2, 8);
-
     lPaddle->SetPosition(6, HEIGHT / 2);
     rPaddle->SetPosition(WIDTH - 6, HEIGHT / 2);
 
@@ -22,7 +24,7 @@ bool Game::Initialize(SDL_Surface* screenSurface) {
         return false;
     }
 
-    Reset(Vector2::LEFT);
+    Reset();
 
     return true;
 }
@@ -42,10 +44,11 @@ GameObject* Game::CreateObject(int id) {
 
 void Game::Update() {
 
+    if(over) { return; }
+
     GameObject* lPaddle = gObjects[(int)Paddle_Left];
     GameObject* rPaddle = gObjects[(int)Paddle_Right];
     GameObject* ball = gObjects[(int)Ball];
-
 
     // Handle input
     const Uint8* keyState = SDL_GetKeyboardState(NULL);
@@ -65,7 +68,7 @@ void Game::Update() {
     }
 
     // Handle wall collision
-    if(ball->Top() <= 0 || ball->Bottom() >= HEIGHT) {
+    if(ball->Top() < 0 || ball->Bottom() > HEIGHT) {
         ball->SetVelocity(Vector2(ball->Velocity().x, -ball->Velocity().y));    // Change y direction
     }
 
@@ -96,32 +99,48 @@ void Game::Update() {
         ball->SetVelocity(ballVel * curBallSpeed);
     }
 
+    // Check for scoring
+    if(ball->Left() < 0) {
+        OnScore(Left);
+        return;
+    }
+    else if(ball->Right() > WIDTH) {
+        OnScore(Right);
+        return;
+    }
+
     // Resolve movement
     for(auto& gObj : gObjects) {
         GameObject* gameObject = gObj.second;
         gameObject->SetPosition(gameObject->Position() + gameObject->Velocity());
     }
 
-    // Check for scoring
-    if(ball->Left() < 0) {
-        scoreLeft++;
-        Reset(Vector2::RIGHT);
-    }
-    else if(ball->Right() > WIDTH) {
-        scoreRight++;
-        Reset(Vector2::LEFT);
-    }
 
     lPaddle->SetVelocity(Vector2::ZERO);
     rPaddle->SetVelocity(Vector2::ZERO);
 }
 
-void Game::Reset(const Vector2& ballVel) {
+void Game::OnScore(Side side) {
+
+    Vector2 ballVel;
+    if(side == Left) {
+        ++scoreLeft;
+        ballVel = Vector2::LEFT;
+    }
+    else {
+        ++scoreRight;
+        ballVel = Vector2::RIGHT;
+    }
+
+    Reset();
+    gObjects[(int)Ball]->SetVelocity(ballVel);
+}
+
+void Game::Reset() {
     GameObject* ball = gObjects[(int)Ball];
 
     curBallSpeed = SPEED_BALL;
     ball->SetPosition(WIDTH / 2, HEIGHT / 2);
-    ball->SetVelocity(ballVel * curBallSpeed);
 }
 
 void Game::Render(SDL_Surface* surface) {
