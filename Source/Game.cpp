@@ -24,7 +24,7 @@ bool Game::Initialize(SDL_Surface* screenSurface) {
         return false;
     }
 
-    Reset();
+    ResetBall();
 
     return true;
 }
@@ -40,6 +40,18 @@ GameObject* Game::CreateObject(int id) {
     GameObject* obj = new GameObject(id);
     gObjects[id] = obj;
     return obj;
+}
+
+void Game::HandleSDLEvent(const SDL_Event& ev) {
+    if(ev.type == SDL_KEYDOWN) {
+        SDL_Keycode key = ev.key.keysym.sym;
+        if(key == SDLK_RETURN || key == SDLK_SPACE) {
+            over = false;
+            scoreLeft = 0;
+            scoreRight = 0;
+            gObjects[(int)Ball]->SetVelocity(Vector2::RIGHT * curBallSpeed);
+        }
+    }
 }
 
 void Game::Update() {
@@ -132,17 +144,19 @@ void Game::OnScore(Side side) {
         ballVel = Vector2::RIGHT;
     }
 
-    Reset();
+    ResetBall();
 
     if(scoreLeft == SCORE_MAX || scoreRight == SCORE_MAX) {
         over = true;
         ballVel = Vector2::ZERO;
+        gObjects[(int)Paddle_Left]->SetY(HEIGHT / 2);
+        gObjects[(int)Paddle_Right]->SetY(HEIGHT / 2);
     }
 
     gObjects[(int)Ball]->SetVelocity(ballVel);
 }
 
-void Game::Reset() {
+void Game::ResetBall() {
 
     GameObject* ball = gObjects[(int)Ball];
 

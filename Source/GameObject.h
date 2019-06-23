@@ -27,6 +27,8 @@ public:
     int Right() const { return X() + halfWidth; }
     int X() const { return (int)roundf(position.x); }
     int Y() const { return (int)roundf(position.y); }
+    void SetX(float val) { position.x = val; }
+    void SetY(float val) { position.y = val; }
     Vector2 Position() const { return position; }
     void SetPosition(const Vector2& position) { this->position = position; }
     void SetPosition(int x, int y) { position.Set(x, y); }

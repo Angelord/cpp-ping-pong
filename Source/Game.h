@@ -24,9 +24,9 @@ class Game {
     static constexpr int HEIGHT = 84;
     static constexpr int MARGIN_HEIGHT = 12;
     static constexpr float SPEED_BALL = 1.0f;
-    static constexpr float SPEED_INCREMENT = 0.2f;  //How much the ball's speed increases when hit
+    static constexpr float SPEED_INCREMENT = 0.1f;  //How much the ball's speed increases when hit
     static constexpr float SPEED_PADDLE = 1.0f;
-    static constexpr int SCORE_MAX = 8;
+    static constexpr int SCORE_MAX = 6;
 
     bool over = false;
     std::map<int, GameObject*> gObjects;
@@ -43,6 +43,8 @@ public:
 
     bool Initialize(SDL_Surface* screenSurface);
 
+    void HandleSDLEvent(const SDL_Event& ev);
+
     void Update();
 
     void Render(SDL_Surface* surface);
@@ -53,7 +55,7 @@ private:
 
     void OnScore(Side side);
 
-    void Reset();
+    void ResetBall();
 
     void SetPixel(int x, int y, Uint32 color);
 };

@@ -94,5 +94,8 @@ void HandleEvents() {
         if(ev.type == SDL_QUIT) {
             g_quit = true;
         }
+        else {
+            g_game->HandleSDLEvent(ev);
+        }
     }
 }
