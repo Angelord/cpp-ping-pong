@@ -6,6 +6,7 @@
 #define CPP_PING_PONG_LOGIC_H
 
 #include "GameObject.h"
+#include <random>
 
 enum ObjectIDs {
     Paddle_Left,
@@ -24,9 +25,13 @@ class Game {
     static constexpr int HEIGHT = 84;
     static constexpr int MARGIN_HEIGHT = 12;
     static constexpr float SPEED_BALL = 1.0f;
-    static constexpr float SPEED_INCREMENT = 0.05f;  //How much the ball's speed increases when hit
+    static constexpr float SPEED_INCREMENT = 0.1f;  //How much the ball's speed increases when hit
     static constexpr float SPEED_PADDLE = 1.0f;
     static constexpr int SCORE_MAX = 6;
+
+    static const Vector2 BALL_POS_CENTER;
+    static const Vector2 BALL_POS_LEFT;
+    static const Vector2 BALL_POS_RIGHT;
 
     bool over = false;
     std::map<int, GameObject*> gObjects;
@@ -34,10 +39,12 @@ class Game {
     float curBallSpeed = SPEED_BALL;
     int scoreLeft = 0;
     int scoreRight = 0;
+    std::mt19937 rnGen;
+    std::uniform_real_distribution<float> rnDis;
 
-public:
+  public:
 
-    Game() : gObjects() { }
+    Game() : gObjects(), rnDis(-1.0f, 1.0f) { }
 
     ~Game();
 
@@ -55,7 +62,9 @@ private:
 
     void OnScore(Side side);
 
-    void ResetBall();
+    void ResetBall(const Vector2& pos);
+
+    void LaunchBall(const Vector2& dir);
 
     void SetPixel(int x, int y, Uint32 color);
 };

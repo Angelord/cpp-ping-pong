@@ -4,6 +4,10 @@
 
 #include "Game.h"
 
+const Vector2 Game::BALL_POS_CENTER(WIDTH / 2, HEIGHT / 2);
+const Vector2 Game::BALL_POS_LEFT(8, HEIGHT / 2);
+const Vector2 Game::BALL_POS_RIGHT(WIDTH - 8, HEIGHT / 2);
+
 bool Game::Initialize(SDL_Surface* screenSurface) {
 
     GameObject* ball = CreateObject((int)ObjectIDs::Ball);
@@ -11,7 +15,6 @@ bool Game::Initialize(SDL_Surface* screenSurface) {
     GameObject* lPaddle = CreateObject((int)ObjectIDs::Paddle_Left);
 
     ball->SetSize(2, 2);
-    ball->SetVelocity(Vector2::RIGHT * curBallSpeed);
 
     lPaddle->SetSize(2, 8);
     rPaddle->SetSize(2, 8);
@@ -24,7 +27,8 @@ bool Game::Initialize(SDL_Surface* screenSurface) {
         return false;
     }
 
-    ResetBall();
+    ResetBall(BALL_POS_LEFT);
+    LaunchBall(Vector2::RIGHT);
 
     return true;
 }
@@ -49,7 +53,7 @@ void Game::HandleSDLEvent(const SDL_Event& ev) {
             over = false;
             scoreLeft = 0;
             scoreRight = 0;
-            gObjects[(int)Ball]->SetVelocity(Vector2::RIGHT * curBallSpeed);
+            LaunchBall(Vector2::RIGHT);
         }
     }
 }
@@ -87,17 +91,19 @@ void Game::Update() {
     // Handle paddle collision
     bool hit = false;
     GameObject* hitPaddle = NULL;
-    if(ball->Left() < lPaddle->Right()
+    if(ball->Velocity().x < 0.0f
+    && ball->Left() < lPaddle->Right()
     && ball->Right() > lPaddle->Left()
     && ball->Bottom() > lPaddle->Top()
     && ball->Top() < lPaddle->Bottom()) {
         hit = true;
         hitPaddle = lPaddle;
     }
-    else if(ball->Right() > rPaddle->Left()
-       && ball->Left() < rPaddle->Right()
-       && ball->Bottom() > rPaddle->Top()
-       && ball->Top() < rPaddle->Bottom()) {
+    else if(ball->Velocity().x > 0.0f
+    && ball->Right() > rPaddle->Left()
+    && ball->Left() < rPaddle->Right()
+    && ball->Bottom() > rPaddle->Top()
+    && ball->Top() < rPaddle->Bottom()) {
         hit = true;
         hitPaddle = rPaddle;
     }
@@ -105,8 +111,8 @@ void Game::Update() {
     if(hit) {
         curBallSpeed += SPEED_INCREMENT;
         Vector2 ballVel = ball->Velocity();
-        ballVel.x = -sgn(ballVel.x) * abs(ballVel.x);
-        ballVel.y += hitPaddle->Velocity().y / 2;
+        ballVel.x = -sgn(ballVel.x);
+        ballVel.y += rnDis(rnGen) / 4.0f;
         ballVel.Normalize();
         ball->SetVelocity(ballVel * curBallSpeed);
     }
@@ -134,34 +140,32 @@ void Game::Update() {
 
 void Game::OnScore(Side side) {
 
-    Vector2 ballVel;
-    if(side == Left) {
-        ++scoreLeft;
-        ballVel = Vector2::LEFT;
-    }
-    else {
-        ++scoreRight;
-        ballVel = Vector2::RIGHT;
-    }
-
-    ResetBall();
+    side == Left ? ++scoreLeft : ++scoreRight;
 
     if(scoreLeft == SCORE_MAX || scoreRight == SCORE_MAX) {
         over = true;
-        ballVel = Vector2::ZERO;
         gObjects[(int)Paddle_Left]->SetY(HEIGHT / 2);
         gObjects[(int)Paddle_Right]->SetY(HEIGHT / 2);
+        ResetBall(BALL_POS_CENTER);
+        return;
     }
 
-    gObjects[(int)Ball]->SetVelocity(ballVel);
+    ResetBall(side == Left ? BALL_POS_LEFT : BALL_POS_RIGHT);
+    LaunchBall(side == Left ? Vector2::RIGHT : Vector2::LEFT);
 }
 
-void Game::ResetBall() {
+void Game::ResetBall(const Vector2& pos) {
 
     GameObject* ball = gObjects[(int)Ball];
 
     curBallSpeed = SPEED_BALL;
-    ball->SetPosition(WIDTH / 2, HEIGHT / 2);
+    ball->SetPosition(pos);
+}
+
+void Game::LaunchBall(const Vector2& dir) {
+    Vector2 vel = dir;
+    vel.y = rnDis(rnGen);
+    gObjects[(int)Ball]->SetVelocity(vel);
 }
 
 void Game::Render(SDL_Surface* surface) {
