@@ -26,7 +26,7 @@ class Game {
     static constexpr int HEIGHT = 84;
     static constexpr int MARGIN_HEIGHT = 12;
     static constexpr float SPEED_BALL = 1.0f;
-    static constexpr float SPEED_INCREMENT = 0.1f;  //How much the ball's speed increases when hit
+    static constexpr float SPEED_INCREMENT = 0.1f;  //How much the ball's speed increases with each hit
     static constexpr float SPEED_PADDLE = 1.0f;
     static constexpr int SCORE_MAX = 6;
 
@@ -51,7 +51,7 @@ class Game {
 
   public:
 
-    Game() : gObjects(), rnDis(-1.0f, 1.0f) { }
+    Game() : gObjects(), rnGen(), rnDis(-1.0f, 1.0f), beeper() { }
 
     ~Game();
 
@@ -66,6 +66,12 @@ class Game {
 private:
 
     GameObject* CreateObject(int id);
+
+    GameObject* GetBall() { return gObjects[(int)ObjectIDs::Ball]; }
+
+    GameObject* GetLPaddle() { return gObjects[(int)ObjectIDs::Paddle_Left]; }
+
+    GameObject* GetRPaddle() { return gObjects[(int)ObjectIDs::Paddle_Right]; }
 
     void OnScore(Side side);
 

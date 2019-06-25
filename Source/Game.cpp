@@ -91,14 +91,12 @@ void Game::Update() {
 
     // Handle paddle collision
     bool hit = false;
-    GameObject* hitPaddle = NULL;
     if(ball->Velocity().x < 0.0f
     && ball->Left() < lPaddle->Right()
     && ball->Right() > lPaddle->Left()
     && ball->Bottom() > lPaddle->Top()
     && ball->Top() < lPaddle->Bottom()) {
         hit = true;
-        hitPaddle = lPaddle;
     }
     else if(ball->Velocity().x > 0.0f
     && ball->Right() > rPaddle->Left()
@@ -106,7 +104,6 @@ void Game::Update() {
     && ball->Bottom() > rPaddle->Top()
     && ball->Top() < rPaddle->Bottom()) {
         hit = true;
-        hitPaddle = rPaddle;
     }
 
     if(hit) {
@@ -179,6 +176,7 @@ void Game::Render(SDL_Surface* surface) {
 
     SDL_FillRect(renderSurf, NULL, black);
 
+    // Draw the game Objects
     for(auto it = gObjects.begin(); it != gObjects.end(); it++) {
 
         GameObject* obj = it->second;
@@ -190,16 +188,19 @@ void Game::Render(SDL_Surface* surface) {
         }
     }
 
+    // Draw the bottom margin
     for(int x = 0; x < WIDTH; x++) {
         for(int y = HEIGHT; y < HEIGHT + MARGIN_HEIGHT; y++) {
             SetPixel(x, y, white);
         }
     }
 
+    // Draw left player score
     for(int l = 0; l < scoreLeft; l++) {
         SetPixel(10 + l * 4, HEIGHT + MARGIN_HEIGHT / 2, black);
     }
 
+    // Draw right player score
     for(int r = 0; r < scoreRight; r++) {
         SetPixel(WIDTH - (10 + r * 4), HEIGHT + MARGIN_HEIGHT / 2, black);
     }
