@@ -86,7 +86,7 @@ void Game::Update() {
     // Handle wall collision
     if(ball->Top() < 0 || ball->Bottom() > HEIGHT) {
         ball->SetVelocity(Vector2(ball->Velocity().x, -ball->Velocity().y));    // Change y direction
-        beeper.Beep(SOUND_HIT_HZ, SOUND_HIT_DURATION);
+        beeper.Beep(SF_HZ_HIT, SF_DURATION_HIT);
     }
 
     // Handle paddle collision
@@ -116,7 +116,7 @@ void Game::Update() {
         ballVel.y += rnDis(rnGen) / 4.0f;
         ballVel.Normalize();
         ball->SetVelocity(ballVel * curBallSpeed);
-        beeper.Beep(SOUND_HIT_HZ, SOUND_HIT_DURATION);
+        beeper.Beep(SF_HZ_HIT, SF_DURATION_HIT);
     }
 
     // Check for scoring
@@ -141,6 +141,8 @@ void Game::Update() {
 }
 
 void Game::OnScore(Side side) {
+
+    beeper.Beep(SF_HZ_SCORE, SF_DURATION_SCORE);
 
     side == Left ? ++scoreLeft : ++scoreRight;
 
