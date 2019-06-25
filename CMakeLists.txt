@@ -10,6 +10,7 @@ add_executable(cpp_ping_pong
         Source/Game.cpp
         Source/Vector2.cpp
         Source/Timer.cpp
+        Source/Beeper.cpp
         )
 
 target_link_libraries(cpp_ping_pong

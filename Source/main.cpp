@@ -52,7 +52,7 @@ int main() {
 
 bool Initialize() {
 
-    if(SDL_Init(SDL_INIT_VIDEO) < 0) {
+    if(SDL_Init(SDL_INIT_VIDEO & SDL_INIT_AUDIO) < 0) {
         std::cerr << "ERROR::Failed to initialize SDL!" << SDL_GetError() << std::endl;
         return false;
     }

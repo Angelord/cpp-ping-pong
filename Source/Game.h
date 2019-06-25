@@ -6,6 +6,7 @@
 #define CPP_PING_PONG_LOGIC_H
 
 #include "GameObject.h"
+#include "Beeper.h"
 #include <random>
 
 enum ObjectIDs {
@@ -28,6 +29,8 @@ class Game {
     static constexpr float SPEED_INCREMENT = 0.1f;  //How much the ball's speed increases when hit
     static constexpr float SPEED_PADDLE = 1.0f;
     static constexpr int SCORE_MAX = 6;
+    static constexpr double SOUND_HIT_HZ = 350.0;
+    static constexpr int SOUND_HIT_DURATION = 80;
 
     static const Vector2 BALL_POS_CENTER;
     static const Vector2 BALL_POS_LEFT;
@@ -41,6 +44,7 @@ class Game {
     int scoreRight = 0;
     std::mt19937 rnGen;
     std::uniform_real_distribution<float> rnDis;
+    Beeper beeper;
 
   public:
 
