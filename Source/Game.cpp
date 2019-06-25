@@ -10,7 +10,7 @@ bool Game::Initialize(SDL_Surface* screenSurface) {
     GameObject* rPaddle = CreateObject((int)ObjectIDs::Paddle_Right);
     GameObject* lPaddle = CreateObject((int)ObjectIDs::Paddle_Left);
 
-    ball->SetSize(1, 1);
+    ball->SetSize(2, 2);
     ball->SetVelocity(Vector2::RIGHT * curBallSpeed);
 
     lPaddle->SetSize(2, 8);
@@ -105,8 +105,8 @@ void Game::Update() {
     if(hit) {
         curBallSpeed += SPEED_INCREMENT;
         Vector2 ballVel = ball->Velocity();
-        ballVel.x = -sgn(ballVel.x);
-        ballVel = (ballVel + hitPaddle->Velocity());
+        ballVel.x = -sgn(ballVel.x) * abs(ballVel.x);
+        ballVel.y += hitPaddle->Velocity().y / 2;
         ballVel.Normalize();
         ball->SetVelocity(ballVel * curBallSpeed);
     }
