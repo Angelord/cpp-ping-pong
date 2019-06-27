@@ -3,7 +3,12 @@ project(ping_pong)
 
 set(CMAKE_CXX_STANDARD 14)
 
-include_directories(Includes/SDL)
+# Find SDL2
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/Modules")
+find_package(SDL2 REQUIRED COMPONENTS main)
+include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_I} Source)
+message(${SDL2_INCLUDE_DIRS})
+message(${SDL2_LIBS})
 
 add_executable(ping_pong
         Source/main.cpp
@@ -13,6 +18,12 @@ add_executable(ping_pong
         Source/Beeper.cpp
         )
 
-target_link_libraries(ping_pong
-        "-framework SDL2"
-        )
+target_link_libraries(ping_pong ${SDL2_LIBS} )
+
+# Copy SDL2 DLLs to output folder on Windows
+if(WIN32)
+    foreach(DLL ${SDL2_DLLS})
+        add_custom_command(TARGET ping_pong POST_BUILD COMMAND
+                ${CMAKE_COMMAND} -E copy_if_different ${DLL} $<TARGET_FILE_DIR:ping_pong>)
+    endforeach()
+endif()

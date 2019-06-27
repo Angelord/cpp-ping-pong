@@ -7,7 +7,7 @@
 
 #include <queue>
 #include <cmath>
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 const int AMPLITUDE = 28000;
 const int FREQUENCY = 44100;

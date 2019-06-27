@@ -3,7 +3,7 @@
 //
 
 #include "Beeper.h"
-#include <SDL/SDL_audio.h>
+#include <SDL_audio.h>
 
 Beeper::Beeper() {
     SDL_AudioSpec desiredSpec;

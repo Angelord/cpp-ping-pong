@@ -31,7 +31,7 @@ public:
     void SetY(float val) { position.y = val; }
     Vector2 Position() const { return position; }
     void SetPosition(const Vector2& position) { this->position = position; }
-    void SetPosition(int x, int y) { position.Set(x, y); }
+    void SetPosition(int x, int y) { position.Set((float)x, (float)y); }
     Vector2 Velocity() const { return velocity; }
     void SetVelocity(const Vector2& velocity) { this->velocity = velocity; }
 

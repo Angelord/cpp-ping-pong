@@ -109,7 +109,7 @@ void Game::Update() {
     if(hit) {
         curBallSpeed += SPEED_INCREMENT;
         Vector2 ballVel = ball->Velocity();
-        ballVel.x = -sgn(ballVel.x);
+        ballVel.x = (float)-sgn(ballVel.x);
         ballVel.y += rnDis(rnGen) / 4.0f;
         ballVel.Normalize();
         ball->SetVelocity(ballVel * curBallSpeed);
