@@ -27,7 +27,7 @@ class Game {
     static constexpr int MARGIN_HEIGHT = 12;
     static constexpr float SPEED_BALL = 1.0f;
     static constexpr float SPEED_INCREMENT = 0.1f;  //How much the ball's speed increases with each hit
-    static constexpr float SPEED_PADDLE = 1.0f;
+    static constexpr float SPEED_PADDLE = 1.2f;
     static constexpr int SCORE_MAX = 6;
 
     static constexpr double SF_HZ_HIT = 410.0;

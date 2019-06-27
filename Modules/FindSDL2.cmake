@@ -20,11 +20,12 @@ foreach(_SDL2_component ${SDL2_FIND_COMPONENTS})
     endif()
 endforeach()
 
+set(SDL2_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/../Extern/SDL2/include")
+
 if(WIN32)
+    find_path(SDL2_ROOT "include/SDL.h" PATHS "${CMAKE_CURRENT_LIST_DIR}/../Extern/SDL2" NO_DEFAULT_PATH)
     # Search for SDL2 Debug CMake build in Extern/SDL2/build
-    find_path(SDL2_ROOT "include/SDL.h" PATHS "${CMAKE_CURRENT_LIST_DIR}/../extern/SDL2" NO_DEFAULT_PATH)
     if(SDL2_ROOT)
-        set(SDL2_INCLUDE_DIRS "${SDL2_ROOT}/include")
         if("${CMAKE_GENERATOR}" MATCHES "Win64")
             set(SDL2_LIBS "${SDL2_ROOT}/lib/x64/SDL2.lib")
             set(SDL2_DLLS "${SDL2_ROOT}/lib/x64/SDL2.dll")
@@ -43,9 +44,7 @@ if(WIN32)
     mark_as_advanced(SDL2_ROOT)
     find_package_handle_standard_args(SDL2 DEFAULT_MSG SDL2_INCLUDE_DIRS SDL2_LIBS SDL2_DLLS)
 else()
-    # On MacOS, should be installed via Macports
-    # On Ubuntu, install with: apt-get install libsdl2-dev
-    find_path(SDL2_INCLUDE_DIRS SDL.h PATH_SUFFIXES SDL2)
+#    find_path(SDL2_INCLUDE_DIRS SDL.h PATH_SUFFIXES SDL2)
     find_library(_SDL2_LIB SDL2)
     set(SDL2_LIBS ${SDL2})
     if(_SDL2_use_main)

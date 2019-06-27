@@ -6,9 +6,7 @@ set(CMAKE_CXX_STANDARD 14)
 # Find SDL2
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/Modules")
 find_package(SDL2 REQUIRED COMPONENTS main)
-include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_I} Source)
-message(${SDL2_INCLUDE_DIRS})
-message(${SDL2_LIBS})
+include_directories(${SDL2_INCLUDE_DIRS} Source)
 
 add_executable(ping_pong
         Source/main.cpp
