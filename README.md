@@ -2,9 +2,7 @@
 A simple ping pong game made with C++ and SDL. 
 
 ## How to Build
-You're going to need CMake and the SDL2 library.
-For Windows, unzip SDL into sdl-ping-pong/Extern and rename it to SDL2.
-For OSX, make sure you have the SDL2 framework installed. Copy its headers to Extern/SDL2/include.
+You're going to need cmake. Use it to generate a project for your compiler of choice and build.
 
 ## How to Play
 *W* and *S* move the left paddle.
